@@ -1,0 +1,22 @@
+---
+
+- name: Apply all common components for Kubernetes.
+  hosts: all
+  remote_user: root
+
+  roles:
+    - common
+
+- name: Apply Master Node configurations for Kubernetes.
+  hosts: master
+  remote_user: root
+
+  roles:
+    - master
+
+- name: Apply Worker Node configurations for Kubernetes.
+  hosts: worker
+  remote_user: root
+
+  roles:
+    - worker

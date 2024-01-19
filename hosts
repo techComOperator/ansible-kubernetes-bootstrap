@@ -1,0 +1,5 @@
+[master]
+kube-master
+
+[worker]
+kube-worker-[1:2]
