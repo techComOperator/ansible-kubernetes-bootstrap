@@ -1,0 +1,3 @@
+- name: Run Shell - Add Server to Kube Cluster as worker
+  ansible.builtin.shell: kube_worker_registration
+  when: kube_worker_registration.rc == 0

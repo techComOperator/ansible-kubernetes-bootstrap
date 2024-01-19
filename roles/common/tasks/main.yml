@@ -1,0 +1,34 @@
+# This playbook contains common commands to run for all nodes.
+
+- name: Run command - Disable swap
+  ansible.builtin.command: sudo swapoff -a
+
+# TODO: Add a check to see if swap is already disabled.
+- name: Run shell - Disable swap in /etc/fstab using sed using inline.
+  ansible.builtin.shell: sudo sed -i '/^\/swap/ s/./#&/' /etc/fstab
+
+- name: Update APT repositories and install docker.io
+  ansible.builtin.apt:
+    pkg:
+    - docker.io
+    - curl
+    - apt-transport-https
+    state: present
+    update_cache: yes
+
+- name: Run Shell - Add key from Google
+  ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+# TODO: Replace the version listed in the URL with a variable to make updates easier.
+- name: Run Shell - Add Repository for Kubernetes
+  ansible.builtin.shell: echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+- name: Update APT repositories with Kubernetes and install packages.
+  ansible.builtin.apt:
+    pkg:
+    - kubeadm
+    - kubelet
+    - kubectl
+    - kubernetes-cni
+    state: present
+    update_cache: yes
