@@ -14,7 +14,7 @@
     - curl
     - apt-transport-https
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Run Shell - Add key from Google
   ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
@@ -31,4 +31,4 @@
     - kubectl
     - kubernetes-cni
     state: present
-    update_cache: yes
+    update_cache: true
