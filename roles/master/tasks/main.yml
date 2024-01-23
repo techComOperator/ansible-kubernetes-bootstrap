@@ -1,3 +1,4 @@
+---
 - name: Run Shell - Run kubeadm to initiate the cluster
   ansible.builtin.shell: sudo kubeadm init | grep "kubeadm join"
   register: kube_worker_registration

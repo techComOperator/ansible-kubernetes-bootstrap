@@ -1,3 +1,4 @@
+---
 # This playbook contains common commands to run for all nodes.
 
 - name: Run command - Disable swap
@@ -10,9 +11,9 @@
 - name: Update APT repositories and install docker.io
   ansible.builtin.apt:
     pkg:
-    - docker.io
-    - curl
-    - apt-transport-https
+      - docker.io
+      - curl
+      - apt-transport-https
     state: present
     update_cache: true
 
@@ -30,9 +31,9 @@
 - name: Update APT repositories with Kubernetes and install packages.
   ansible.builtin.apt:
     pkg:
-    - kubeadm
-    - kubelet
-    - kubectl
-    - kubernetes-cni
+      - kubeadm
+      - kubelet
+      - kubectl
+      - kubernetes-cni
     state: present
     update_cache: true

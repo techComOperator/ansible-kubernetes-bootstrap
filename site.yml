@@ -1,5 +1,4 @@
 ---
-
 - name: Apply all common components for Kubernetes.
   hosts: all
   remote_user: root
