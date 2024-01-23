@@ -17,11 +17,15 @@
     update_cache: true
 
 - name: Run Shell - Add key from Google
-  ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key |  gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg --yes
 
 # TODO: Place repository file in location instead of running command.
-- name: Run Shell - Add Repository for Kubernetes
-  ansible.builtin.shell: echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+- name: Run Copy - Add Repository for Kubernetes
+  ansible.builtin.copy:
+    content: deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /
+    dest: /etc/apt/sources.list.d/kubernetes.list
+    owner: root
+    group: root
 
 - name: Update APT repositories with Kubernetes and install packages.
   ansible.builtin.apt:

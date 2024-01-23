@@ -2,3 +2,5 @@
   ansible.builtin.shell: sudo kubeadm init | grep "kubeadm join"
   register: kube_worker_registration
   ignore_errors: false
+- set_fact:
+    worker_registration: "{{ kube_worker_registration.stdout }}"
