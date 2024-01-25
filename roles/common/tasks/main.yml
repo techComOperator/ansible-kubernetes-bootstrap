@@ -1,4 +1,3 @@
----
 # This playbook contains common commands to run for all nodes.
 
 - name: Run command - Disable swap
@@ -15,15 +14,14 @@
 - name: Update APT repositories and install docker.io
   ansible.builtin.apt:
     pkg:
-      - docker.io
-      - curl
-      - apt-transport-https
+    - docker.io
+    - curl
+    - apt-transport-https
     state: present
     update_cache: true
 
 - name: Run Shell - Add key from Google
-  ansible.builtin.shell: set -o pipefail && curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-    --yes
+  ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg --yes
   register: cmd
   changed_when: cmd.rc != 0
 
@@ -39,9 +37,9 @@
 - name: Update APT repositories with Kubernetes and install packages.
   ansible.builtin.apt:
     pkg:
-      - kubeadm
-      - kubelet
-      - kubectl
-      - kubernetes-cni
+    - kubeadm
+    - kubelet
+    - kubectl
+    - kubernetes-cni
     state: present
     update_cache: true

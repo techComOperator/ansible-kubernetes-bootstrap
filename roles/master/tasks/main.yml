@@ -1,12 +1,14 @@
----
 - name: Run Shell - Run kubeadm to initiate the cluster
-  ansible.builtin.shell: set -o pipefail && sudo kubeadm init | grep "kubeadm join"
-  register: kube_worker_registration
+  ansible.builtin.shell: sudo kubeadm init
+  register: cmd
   ignore_errors: false
-  changed_when: kube_worker_registration.rc != 0
+  changed_when: cmd.rc != 0
+
+- name: Run Shell - Make the Join command
+  ansible.builtin.shell: sudo kubeadm token create --print-join-command
+  register: kube_worker_registration
 
 # With the fact cached, it creates two sets. One host var and one "ansible_fact".
-- name: Set Fact - Set the output to an Ansible var.
+- name: Set Fact - Set the join output to an Ansible var.
   ansible.builtin.set_fact:
-    worker_registration: "{{ kube_worker_registration.stdout }}"
-    cacheable: true
+    worker_registration: "{{ kube_worker_registration.stdout_lines[0] }}"
