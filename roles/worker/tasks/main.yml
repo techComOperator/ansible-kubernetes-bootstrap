@@ -1,3 +1,5 @@
 ---
 - name: Run Shell - Add Server to Kube Cluster as worker
-  ansible.builtin.shell: { { worker_registration: "" }: "" }
+  ansible.builtin.command: "{{ worker_registration }}"
+  register: cmd
+  changed_when: cmd.rc != 0

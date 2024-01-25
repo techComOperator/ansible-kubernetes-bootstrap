@@ -3,10 +3,14 @@
 
 - name: Run command - Disable swap
   ansible.builtin.command: sudo swapoff -a
+  register: cmd
+  changed_when: cmd.rc != 0
 
 # TODO: Add a check to see if swap is already disabled.
 - name: Run shell - Disable swap in /etc/fstab using sed using inline.
   ansible.builtin.shell: sudo sed -i '/^\/swap/ s/./#&/' /etc/fstab
+  register: cmd
+  changed_when: cmd.rc != 0
 
 - name: Update APT repositories and install docker.io
   ansible.builtin.apt:
@@ -18,13 +22,17 @@
     update_cache: true
 
 - name: Run Shell - Add key from Google
-  ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key |  gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg --yes
+  ansible.builtin.shell: set -o pipefail && curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    --yes
+  register: cmd
+  changed_when: cmd.rc != 0
 
 # TODO: Place repository file in location instead of running command.
 - name: Run Copy - Add Repository for Kubernetes
   ansible.builtin.copy:
     content: deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /
     dest: /etc/apt/sources.list.d/kubernetes.list
+    mode: "0600"
     owner: root
     group: root
 
